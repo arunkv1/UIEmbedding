@@ -102,7 +102,7 @@ if __name__ == '__main__':
 #   #       image = files[i] + ".png"
 #   #       #print(image)
 #   #       makeEmbedding(image, 'regular') 
-    print(makeEmbedding("/Users/arunkrishnavajjala/Documents/GMU/PhD/SearchEngine/AccessibilitySearch/Data/com.developerfromjokela.motioneyeclient_Bottom_Up_8.png", 'regular'))
+    print(makeEmbedding("---Image Path---", 'regular'))
 
 
 
