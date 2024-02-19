@@ -4,17 +4,24 @@ A brief description of your project goes here.
 
 ## Technical Specifications
 Computer vision
+
 - UIED library to extract icons on the screen
 - Pytesseract to extract text on the screen
+  
 Embeddings (could change, see link)
+
 - CLIP for images
 - BERT for text
 - N/A for graph Nodes
+  
 Graph
+
 - Python NetworkX graph to build the graph
 - Edge Lengths 200 (average distance)
 - Edge weights: 100/distance
+  
 Nodes
+
 - Represent each icon on the screen
 - NetworkX Graph Nodes
 - Contain CLIP embedding
