@@ -64,18 +64,21 @@ def makeGraph(points, midpoints, textEmbeddings):
                 edgeLengths.append(distance)
                 if distance <= threshold_distance and distance > 0:
                     G.add_edge(node1, node2, weight = float(100/distance))
-
     return(G)
 
-points = [['p1'], ['p2'],['p3'],['p4'],['p5'],['p6'],['p7']]
-midpoints = [(1,0), (44,0), (500,1000), (30,76), (90,400), (200, 3), (90,100)]
-textEmbeddings = [['t1'], ['t2'],['t3'],['t4'],['t5'],['t6'],['t7']]
 
 
 def getConnections(G):
     nodes = []
+    ImageEmbeddings = []
+    TextEmbeddings = []
     for node in G.nodes():
         nodes.append(node)
+        image_embedding = G.nodes[node].get('imageembedding', None)
+        ImageEmbeddings.append(image_embedding)
+        text_embedding = G.nodes[node].get('textembedding', None)
+        TextEmbeddings.append(text_embedding)
+
     src = []
     tgt = []
     weights = []
@@ -90,22 +93,28 @@ def getConnections(G):
                 src.append(node_index)
                 tgt.append(nodes.index(neighbor))
                 weights.append(edge_weight)
-    return nodes, src, tgt, weights
 
-G = makeGraph(points, midpoints, textEmbeddings)
+    return nodes, ImageEmbeddings, textEmbeddings, src, tgt, weights
 
-nodes, src, tgt, weights = getConnections(G)
+if __name__ == "__main__":
+    # Sample Graph
+    points = [['p1'], ['p2'],['p3'],['p4'],['p5'],['p6'],['p7']]
+    midpoints = [(1,1), (44,0), (500,1000), (30,76), (90,400), (200, 3), (90,100)]
+    textEmbeddings = [['t1'], ['t2'],['t3'],['t4'],['t5'],['t6'],['t7']]
 
-print("STATS")
-print("Length Nodes: " + str(len(nodes)))
-print("Length SRC: " + str(len(src)))
-print("Length TGT: " + str(len(tgt)))
-print("Length Weights: " + str(len(weights)))
-print()
-print("Nodes are: " + str(nodes))
-print("SRC is: " + str(src))
-print("TGT is: " + str(tgt))
-print("Weights are: " + str(weights))
+    G = makeGraph(points, midpoints, textEmbeddings)
+    nodes, images, texts, src, tgt, weights = getConnections(G)
+
+    print("STATS")
+    print("Length Nodes: " + str(len(nodes)))
+    print("Length SRC: " + str(len(src)))
+    print("Length TGT: " + str(len(tgt)))
+    print("Length Weights: " + str(len(weights)))
+    print()
+    print("Nodes are: " + str(nodes))
+    print("SRC is: " + str(src))
+    print("TGT is: " + str(tgt))
+    print("Weights are: " + str(weights))
 
 
 
