@@ -84,7 +84,9 @@ def makeEmbedding(image, embeddingType):
 
     big_textEmbedding = makeTextEmbedding(textImage)
     GRAPH = makeGraph(points, midpoints, textEmbeddings)
-    graphEmbedding = embedGraph(GRAPH)
+    nodes, images, texts, src, tgt, weights = getConnections(GRAPH)
+
+
 
 if __name__ == '__main__':
 #   # data_folder = './Data'
