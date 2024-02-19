@@ -1,6 +1,10 @@
 # UI Embedding
 
-A brief description of your project goes here.
+This project takes in an image and generates an embedding
+
+## Important Files 
+- UI_Embedding_main.py is the Main file that is ran to create the embedding
+- graphCreation.py is responsible for making the graph. The getConnections(G) function, returns ```nodes, ImageEmbeddings, textEmbeddings, src, tgt, weights``` to be propagated
 
 ## Technical Specifications
 Computer vision
@@ -28,7 +32,6 @@ Nodes
 - Contain BERT Embedding
 - Contain positional coordinate
 
-
 ## Environment Setup
 - Required environment versions:
 - ```Python Version: 3.9.13```
@@ -37,10 +40,4 @@ Nodes
 - Once the dependencies are downloaded, go to line 103 in UI_Embedding_main.py and replace the existing path with a path to a screenshot image on your machine
 - Run ```python3 UI_Embedding_main.py``` to run the code
 
-## 
-
-List the requirements and environment setup instructions here. Include dependencies and any prerequisites needed to run the project.
-
-```bash
-# Example:
-pip install -r requirements.txt
+\
