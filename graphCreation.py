@@ -94,7 +94,7 @@ def getConnections(G):
                 tgt.append(nodes.index(neighbor))
                 weights.append(edge_weight)
 
-    return nodes, ImageEmbeddings, textEmbeddings, src, tgt, weights
+    return nodes, ImageEmbeddings, TextEmbeddings, src, tgt, weights
 
 if __name__ == "__main__":
     # Sample Graph
