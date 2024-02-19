@@ -39,5 +39,3 @@ Nodes
 - The repository will have a requirements.txt file that lists all required packages for UI Embedding to run. In your command line, create a new python environment: ``` python3 -m venv venv``` Once your environment is created, activate it with this command: ```source venv/bin/activate```. Use this command to download all of the dependencies into your virtual environment:  ```pip install -r requirements.txt```.
 - Once the dependencies are downloaded, go to line 103 in UI_Embedding_main.py and replace the existing path with a path to a screenshot image on your machine
 - Run ```python3 UI_Embedding_main.py``` to run the code
-
-\
