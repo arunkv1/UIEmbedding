@@ -99,7 +99,7 @@ def getConnections(G):
 if __name__ == "__main__":
     # Sample Graph
     points = [['p1'], ['p2'],['p3'],['p4'],['p5'],['p6'],['p7']]
-    midpoints = [(1,1), (44,0), (500,1000), (30,76), (90,400), (200, 3), (90,100)]
+    midpoints = [(1,0), (44,0), (500,1000), (30,76), (90,400), (200, 3), (90,100)]
     textEmbeddings = [['t1'], ['t2'],['t3'],['t4'],['t5'],['t6'],['t7']]
 
     G = makeGraph(points, midpoints, textEmbeddings)
