@@ -41,11 +41,11 @@ Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UI
 from UIEDComp import runUIED
 from imageEmbedding import bigImageEmbedding, smallImageEmbeddings, get_midpoint
 from textEmbedding import makeTextEmbedding
-from graphCreation import makeGraph, embedGraph
+from graphCreation import makeGraph, getConnections
 
 warnings.filterwarnings("ignore")
-os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/Code")
-uiedDir = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/Code/detectors/Visual/UIED-master/data/output/ip/"
+os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
+uiedDir = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding/detectors/Visual/UIED-master/data/output/ip/"
 
 def makeEmbedding(image, embeddingType):
     big_image = image
@@ -53,6 +53,7 @@ def makeEmbedding(image, embeddingType):
     textImage = image
     uiedResult = runUIED(image)
     allBoxes = uiedResult[0]
+
     big_image_embedding = bigImageEmbedding(big_image)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -64,9 +65,9 @@ def makeEmbedding(image, embeddingType):
     
     midpoints = []
     textEmbeddings = []
+    image = Image.open(big_image)
     for i in allBoxes:
         # Load and preprocess the image
-        image = Image.open(uiedResult[1])
         cropped = image.crop(i)
         cropTextEmbed = makeTextEmbedding(textImage)
         image_input = preprocess(cropped).unsqueeze(0).to(device)
@@ -86,7 +87,7 @@ def makeEmbedding(image, embeddingType):
     GRAPH = makeGraph(points, midpoints, textEmbeddings)
     nodes, images, texts, src, tgt, weights = getConnections(GRAPH)
 
-
+    return nodes, images, texts, src, tgt, weights
 
 if __name__ == '__main__':
 #   # data_folder = './Data'
@@ -102,7 +103,7 @@ if __name__ == '__main__':
 #   #       image = files[i] + ".png"
 #   #       #print(image)
 #   #       makeEmbedding(image, 'regular') 
-    print(makeEmbedding("---Image Path---", 'regular'))
+    print(makeEmbedding("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/Data/com.iven.iconify_Top_Down_12.png", 'regular'))
 
 
 
