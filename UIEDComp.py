@@ -40,20 +40,24 @@ Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UI
 
 # Suppress all warnings
 warnings.filterwarnings("ignore")
-os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3")
-uiedDir = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/detectors/Visual/UIED-master/data/output/ip/"
+os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
+uiedDir = "./detectors/Visual/UIED-master/data/output/ip"
 
 def runUIED(image):
     foobar.runSingle(image)
     files = []
+    
     imagePath = ""
     jsonPath = ""
     for root, dirs, files_in_dir in os.walk(uiedDir):
+        print(files_in_dir)
         for file_name in files_in_dir:
-            if '.json' in file_name:
-                jsonPath = os.path.join(uiedDir, file_name)
-            if '.jpg' in file_name:
-                imagePath = os.path.join(uiedDir, file_name)
+
+            if 'Store' not in file_name:
+                if '.json' in file_name:
+                    jsonPath = os.path.join(uiedDir, file_name)
+                if '.jpg' in file_name:
+                    imagePath = os.path.join(uiedDir, file_name)
     allBoxes = getBoxes(jsonPath)
     return [allBoxes, imagePath, jsonPath]
 

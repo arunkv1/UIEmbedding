@@ -58,9 +58,10 @@ def makeEmbedding(image, embeddingType):
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model, preprocess = clip.load("ViT-B/32", device=device)
-
+   
     imagePath = uiedResult[2]
     jsonPath = uiedResult[1]
+    print(jsonPath)
     points = []
     
     midpoints = []
@@ -104,9 +105,6 @@ if __name__ == '__main__':
 #   #       #print(image)
 #   #       makeEmbedding(image, 'regular') 
     print(makeEmbedding("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/Data/com.iven.iconify_Top_Down_12.png", 'regular'))
-
-
-
 
 
 
