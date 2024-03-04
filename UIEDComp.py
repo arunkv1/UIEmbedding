@@ -40,7 +40,7 @@ Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UI
 
 # Suppress all warnings
 warnings.filterwarnings("ignore")
-os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
+# os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
 uiedDir = "./detectors/Visual/UIED-master/data/output/ip"
 
 def runUIED(image):

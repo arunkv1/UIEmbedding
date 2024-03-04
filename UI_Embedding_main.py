@@ -44,8 +44,56 @@ from textEmbedding import makeTextEmbedding
 from graphCreation import makeGraph, getConnections
 
 warnings.filterwarnings("ignore")
-os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
+# os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
 uiedDir = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding/detectors/Visual/UIED-master/data/output/ip/"
+
+
+def get_degree (adj):
+    degree = np.sum (adj, axis = 1)
+    for i in range(len(degree)):
+        if degree[i]:
+            degree[i] = 1 / np.sqrt(degree[i])  
+    return degree
+
+
+def get_noralimized_adjacency(src_nodes, trgt_nodes, corpus_size, weight):
+    adj = np.zeros ([corpus_size, corpus_size])
+    adj_sec = np.zeros ([corpus_size, corpus_size])
+    for i in range(corpus_size):
+        direct_nebr, second_nebr = set(), set()
+        for j in range(len(src_nodes)):
+            if i == src_nodes[j]:
+                adj[i][trgt_nodes[j]] = 1
+                direct_nebr.add(trgt_nodes[j])
+            if i == trgt_nodes[j]:
+                adj[i][src_nodes[j]] = 1  
+                direct_nebr.add(src_nodes[j])                  
+        for j in range(len(src_nodes)):
+            for k in direct_nebr:
+                if k == src_nodes[j] and not adj[i][trgt_nodes[j]]:
+                    adj_sec[i][trgt_nodes[j]] = 1
+                    second_nebr.add(trgt_nodes[j])
+                if k == trgt_nodes[j] and not adj[i][src_nodes[j]]:
+                    adj_sec[i][src_nodes[j]] = 1
+                    second_nebr.add(src_nodes[j])
+        adj[i][i] = 0
+        adj_sec[i][i] = 0
+
+    degree, degree_sec = get_degree(adj), get_degree(adj_sec)
+    adj = np.matmul(np.matmul(np.diag(degree), adj * weight), np.diag(degree)) + np.identity(corpus_size)
+    adj_sec = adj + np.matmul(np.matmul(np.diag(degree_sec), adj_sec * weight), np.diag(degree_sec))  
+
+    return adj, adj_sec
+
+
+def augment_embeddings(images, texts, src, tgt, weights, option):
+    node_size = len(images)
+    adj, adj_sec = get_noralimized_adjacency(src, tgt, node_size, weights)
+    if option == 1:
+        return np.matmul(adj, images), np.matmul(adj, texts)
+    else:
+        return np.matmul(adj_sec, images), np.matmul(adj_sec, texts)
+
 
 def makeEmbedding(image, embeddingType):
     big_image = image
@@ -88,7 +136,7 @@ def makeEmbedding(image, embeddingType):
     GRAPH = makeGraph(points, midpoints, textEmbeddings)
     nodes, images, texts, src, tgt, weights = getConnections(GRAPH)
 
-    return None
+    return nodes, images, texts, src, tgt, weights
 
 if __name__ == '__main__':
 #   # data_folder = './Data'
@@ -104,7 +152,13 @@ if __name__ == '__main__':
 #   #       image = files[i] + ".png"
 #   #       #print(image)
 #   #       makeEmbedding(image, 'regular') 
-    print(makeEmbedding("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/Data/com.iven.iconify_Top_Down_12.png", 'regular'))
+    nodes, images, texts, src, tgt, weights = makeEmbedding("/yyan/work/others/UIEmbedding/screenshots/1531.jpg", 'regular')
+    
+    ### embedding propagation using constant weights
+    # weights can be chosen from [0, 1] with increment of 0.1 (0.5 by default used by Athena)
+    # option = 1 means only consider 1-hop neighbors; = 2 means consider neighbors within two hops (2 by default used by Athena)
+    aug_images, aug_texts = augment_embeddings(images, texts, src, tgt, weights = 0.5, option = 1)
+    print(aug_images, aug_texts)
 
 
 
