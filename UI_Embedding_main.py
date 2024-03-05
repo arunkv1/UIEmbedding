@@ -1,32 +1,11 @@
-import xml.etree.ElementTree as ET
-import xml.dom.minidom
-import cv2
 from PIL import Image
 import os
-import pytesseract
 import importlib
-import json
 import clip
 import numpy as np
 import torch
-import torchvision.transforms as transforms
 from PIL import Image
-import torchvision.models as models
-from torchvision.transforms.functional import crop
-from scipy.spatial import Delaunay, ConvexHull, Voronoi
-from sklearn.neighbors import NearestNeighbors
-from sklearn.decomposition import PCA
-import gudhi as gd
 # Use birth_death_pairs to create an embedding, for example, using t-SNE
-from sklearn.manifold import TSNE
-from sklearn.preprocessing import normalize
-import networkx as nx
-import matplotlib.pyplot as plt
-from node2vec import Node2Vec
-from sklearn.manifold import spectral_embedding
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
-from transformers import BertModel, BertTokenizer
 import warnings
 
 foobar = importlib.import_module("detectors.Visual.UIED-master.run_single")
@@ -42,6 +21,7 @@ from UIEDComp import runUIED
 from imageEmbedding import bigImageEmbedding, smallImageEmbeddings, get_midpoint
 from textEmbedding import makeTextEmbedding
 from graphCreation import makeGraph, getConnections
+from embeddingConsolidation import makePoints, compute_centroid, concatenate_embeddings
 
 warnings.filterwarnings("ignore")
 # os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
@@ -136,6 +116,14 @@ def makeEmbedding(image, embeddingType):
     GRAPH = makeGraph(points, midpoints, textEmbeddings)
     nodes, images, texts, src, tgt, weights = getConnections(GRAPH)
 
+    aug_images, aug_texts = augment_embeddings(images, texts, src, tgt, weights = 0.5, option = 1)
+    points = makePoints(aug_images, aug_texts)
+    finalCentroid = compute_centroid(points)
+    withBigClip = concatenate_embeddings(big_image_embedding, finalCentroid)
+    withBigText = concatenate_embeddings(withBigClip, big_textEmbedding)
+    return(withBigText)
+
+
     return nodes, images, texts, src, tgt, weights
 
 if __name__ == '__main__':
@@ -152,13 +140,15 @@ if __name__ == '__main__':
 #   #       image = files[i] + ".png"
 #   #       #print(image)
 #   #       makeEmbedding(image, 'regular') 
-    nodes, images, texts, src, tgt, weights = makeEmbedding("/yyan/work/others/UIEmbedding/screenshots/1531.jpg", 'regular')
+    print(makeEmbedding("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/Data/ac.robinson.mediaphone_Bottom_Up_4.png", 'regular'))
     
     ### embedding propagation using constant weights
     # weights can be chosen from [0, 1] with increment of 0.1 (0.5 by default used by Athena)
     # option = 1 means only consider 1-hop neighbors; = 2 means consider neighbors within two hops (2 by default used by Athena)
-    aug_images, aug_texts = augment_embeddings(images, texts, src, tgt, weights = 0.5, option = 1)
-    print(aug_images, aug_texts)
+    
+
+
+    
 
 
 

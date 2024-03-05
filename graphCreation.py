@@ -1,32 +1,8 @@
 import xml.etree.ElementTree as ET
-import xml.dom.minidom
-import cv2
-from PIL import Image
-import os
-import pytesseract
 import importlib
-import json
-import clip
 import numpy as np
-import torch
-import torchvision.transforms as transforms
-from PIL import Image
-import torchvision.models as models
-from torchvision.transforms.functional import crop
-from scipy.spatial import Delaunay, ConvexHull, Voronoi
-from sklearn.neighbors import NearestNeighbors
-from sklearn.decomposition import PCA
-import gudhi as gd
-# Use birth_death_pairs to create an embedding, for example, using t-SNE
-from sklearn.manifold import TSNE
-from sklearn.preprocessing import normalize
 import networkx as nx
-import matplotlib.pyplot as plt
-from node2vec import Node2Vec
-from sklearn.manifold import spectral_embedding
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
-from transformers import BertModel, BertTokenizer
+
 import warnings
 
 foobar = importlib.import_module("detectors.Visual.UIED-master.run_single")
