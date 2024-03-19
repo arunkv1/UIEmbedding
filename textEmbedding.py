@@ -24,7 +24,15 @@ Congfig = importlib.import_module("detectors.Visual.UIED-master.config.CONFIG_UI
 
 def makeTextEmbedding(image):
     extractedText = pytesseract.image_to_string(image) # extractedText = Settings    Close 
-    textEmbedding = textEmbed(extractedText)
+    textEmbedding = ""
+    if len(extractedText) < 5:
+        extractedText = 'NO-TEXT'
+        textEmbedding = textEmbed(extractedText[0:511])
+
+    if len(extractedText) > 512:
+        textEmbedding = textEmbed(extractedText[0:511])
+    else:
+        textEmbedding = textEmbed(extractedText)
     return textEmbedding
 
 

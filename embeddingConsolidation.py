@@ -110,13 +110,20 @@ def compute_centroid(points):
     print("Num Triangles: " + str(count))
     if count == 0:
         return []
-    final_centroid = compress_embedding(final_centroid)
+    #final_centroid = compress_embedding(final_centroid)
     return final_centroid    
+
+def average_lists(lists):
+    array = np.array(lists)
+    averaged_array = np.mean(array, axis=0)
+
+    return averaged_array.tolist()
 
 def makePoints(aug_images, aug_texts):
     points = []
     for i in range(0, len(aug_images)):
        weighted_aug_texts = [0.5 * value for value in aug_texts[i]]
+       weighted_aug_images = [0.45 * value for value in aug_images[i]]
        point = list(aug_images[i]) + list(weighted_aug_texts)
        points.append(point)
     return points

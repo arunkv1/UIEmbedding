@@ -4,9 +4,13 @@ import time
 start_time = time.time()
 testEmbeds = []
 trainEmbeds = []
-csv_file_path = "/Users/arunkrishnavajjala/Documents/GMU/PhD/LabeledDataset/rico_image_data.csv"
+csv_file_path = "/Users/arunkrishnavajjala/Documents/GMU/PhD/LabeledDataset/avgust/avgust_labeled_data.csv"
 totalCtr = 0
-with open("rips_ricodata.csv", "w", newline="") as csvfile:
+
+
+ErrorCounter = 0
+
+with open("rips_avgustdata.csv", "w", newline="") as csvfile:
     csv_writer = csv.writer(csvfile)
     csv_writer.writerow(["File Path", "Directory Name", "Testing", "embedding"])
     
@@ -18,13 +22,14 @@ with open("rips_ricodata.csv", "w", newline="") as csvfile:
         for row in csv_reader:
             if rowCount > 0:
                 # Check if the row has at least two columns (file path and label)
-
+                
                 if len(row) >= 0:
                     # Extract the file path and label
                     file_path = row[0]
-                    label = row[1]
-                    train = row[2]
+                    label = row[2]
+                    train = row[3]
                     embedding = makeEmbedding(file_path, 'regular') 
+                    row = [file_path, label, train, embedding]
                     print("Write embedding Len: " , len(embedding))
                     row.append(embedding)
                     if train == "test":
@@ -44,8 +49,8 @@ with open("rips_ricodata.csv", "w", newline="") as csvfile:
 
 print(len(testEmbeds))
 print(len(trainEmbeds))
+print("Error Counter: ", ErrorCounter)
 end_time = time.time()
-
 
 elapsed_time = end_time - start_time
 

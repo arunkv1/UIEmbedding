@@ -28,6 +28,9 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from transformers import BertModel, BertTokenizer
 import warnings
+from PIL import ImageEnhance
+
+from PIL import Image, ImageEnhance, ImageOps, ImageFilter
 
 foobar = importlib.import_module("detectors.Visual.UIED-master.run_single")
 pre = importlib.import_module("detectors.Visual.UIED-master.detect_compo.lib_ip.ip_preprocessing")
@@ -42,16 +45,47 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model, preprocess = clip.load("ViT-B/32", device=device)
 
 def bigImageEmbedding(image):
-
     bigimage = Image.open(image)
-    with torch.no_grad():
-        big_image_features = model.encode_image(preprocess(bigimage).unsqueeze(0).to(device))
-    big_image_embedding = big_image_features[0].cpu().numpy()
-    return big_image_embedding
+    
+    # Enhance contrast
+    enhancer = ImageEnhance.Contrast(bigimage)
+    enhanced_image = enhancer.enhance(2.625)
+    
+    # Convert to grayscale
+    grayscale_image = ImageOps.grayscale(enhanced_image)
+    #inverted_img = ImageOps.invert(grayscale_image)
+    
+    # hist = grayscale_image.histogram()
+    # most_common_color_index = np.argmax(hist)
+    
+    # # Get the most common color value
+    # most_common_color_value = most_common_color_index // 256
+    
+    # # Create a mask identifying pixels with the most common color
+    # mask = np.array(grayscale_image) == most_common_color_value
+    
+    # # Apply the mask to the original image to delete those pixels
+    # img_array = np.array(bigimage)
+    # img_array[mask] = [57, 255, 20] 
 
-def smallImageEmbeddings(allBoxes, image):
+    # Convert the modified array back to an image
+    #modified_img = Image.fromarray(img_array)
+
+    # Apply Gaussian blur
+
+    #smoothed_image = grayscale_image.filter(ImageFilter.SMOOTH)
+
+    rank_filtered_image = grayscale_image.filter(ImageFilter.RankFilter(size=3, rank=3))
+    
+    with torch.no_grad():
+        big_image_features = model.encode_image(preprocess(rank_filtered_image).unsqueeze(0).to(device))
+    
+    big_image_embedding = big_image_features[0].cpu().numpy()
+    
+    return big_image_embedding
     
 
+def smallImageEmbeddings(allBoxes, image):
     points = []
     midpoints = []
     for i in allBoxes:
@@ -59,7 +93,7 @@ def smallImageEmbeddings(allBoxes, image):
         image = Image.open(image)
 
         cropped = image.crop(i)
-        image_input = preprocess(cropped.convert('L')).unsqueeze(0).to(device)
+        image_input = preprocess(cropped).unsqueeze(0).to(device)
 
         with torch.no_grad():
             image_features = model.encode_image(image_input)

@@ -50,7 +50,6 @@ def runUIED(image):
     imagePath = ""
     jsonPath = ""
     for root, dirs, files_in_dir in os.walk(uiedDir):
-        print(files_in_dir)
         for file_name in files_in_dir:
 
             if 'Store' not in file_name:
@@ -98,7 +97,7 @@ def getBoxes(json_path):
     print("Number of extracted Elements: " + str(len(sorted_dict)))
     counter= 0
     for i in sorted_dict.keys():
-        if counter < 25:
+        if counter < 15:
             allBoxes.append(i)
             counter += 1
         else:

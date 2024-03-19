@@ -1,3 +1,4 @@
+import time
 from PIL import Image
 import os
 import importlib
@@ -21,7 +22,7 @@ from UIEDComp import runUIED
 from imageEmbedding import bigImageEmbedding, smallImageEmbeddings, get_midpoint
 from textEmbedding import makeTextEmbedding
 from graphCreation import makeGraph, getConnections
-from embeddingConsolidation import makePoints, compute_centroid, concatenate_embeddings
+from embeddingConsolidation import makePoints, compute_centroid, concatenate_embeddings, average_lists
 
 warnings.filterwarnings("ignore")
 # os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
@@ -34,7 +35,6 @@ def get_degree (adj):
         if degree[i]:
             degree[i] = 1 / np.sqrt(degree[i])  
     return degree
-
 
 def get_noralimized_adjacency(src_nodes, trgt_nodes, corpus_size, weight):
     adj = np.zeros ([corpus_size, corpus_size])
@@ -65,7 +65,6 @@ def get_noralimized_adjacency(src_nodes, trgt_nodes, corpus_size, weight):
 
     return adj, adj_sec
 
-
 def augment_embeddings(images, texts, src, tgt, weights, option):
     node_size = len(images)
     adj, adj_sec = get_noralimized_adjacency(src, tgt, node_size, weights)
@@ -74,15 +73,13 @@ def augment_embeddings(images, texts, src, tgt, weights, option):
     else:
         return np.matmul(adj_sec, images), np.matmul(adj_sec, texts)
 
-
 def makeEmbedding(image, embeddingType):
     big_image = image
     image = image
     textImage = image
+    big_image_embedding = bigImageEmbedding(big_image)
     uiedResult = runUIED(image)
     allBoxes = uiedResult[0]
-
-    big_image_embedding = bigImageEmbedding(big_image)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model, preprocess = clip.load("ViT-B/32", device=device)
@@ -91,7 +88,7 @@ def makeEmbedding(image, embeddingType):
     jsonPath = uiedResult[1]
     print(jsonPath)
     points = []
-    
+
     midpoints = []
     textEmbeddings = []
     image = Image.open(big_image)
@@ -115,16 +112,18 @@ def makeEmbedding(image, embeddingType):
     big_textEmbedding = makeTextEmbedding(textImage)
     GRAPH = makeGraph(points, midpoints, textEmbeddings)
     nodes, images, texts, src, tgt, weights = getConnections(GRAPH)
-
-    aug_images, aug_texts = augment_embeddings(images, texts, src, tgt, weights = 0.5, option = 1)
+    # print(texts[1])
+    # print(len(images), len(texts), len(src), len(tgt))
+    # print(type(images[0]), type(texts[0]), type(src), type(tgt))
+    aug_images, aug_texts = augment_embeddings(images, texts, src, tgt, weights = 0.9, option = 1)
+    #print('BIG TEXT: ', len(big_textEmbedding))
     points = makePoints(aug_images, aug_texts)
-    finalCentroid = compute_centroid(points)
+    finalCentroid = average_lists(points)
     withBigClip = concatenate_embeddings(big_image_embedding, finalCentroid)
-    withBigText = concatenate_embeddings(withBigClip, big_textEmbedding)
-    return(withBigText)
+    #withBigText = concatenate_embeddings(withBigClip, big_textEmbedding)
+    #retList = [float(tensor) for tensor in withBigText]
+    return(withBigClip)
 
-
-    return nodes, images, texts, src, tgt, weights
 
 if __name__ == '__main__':
 #   # data_folder = './Data'
@@ -140,8 +139,13 @@ if __name__ == '__main__':
 #   #       image = files[i] + ".png"
 #   #       #print(image)
 #   #       makeEmbedding(image, 'regular') 
-    print(makeEmbedding("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/Data/ac.robinson.mediaphone_Bottom_Up_4.png", 'regular'))
-    
+    start_time = time.time()
+    print(len(makeEmbedding("/Users/arunkrishnavajjala/Documents/GMU/PhD/LabeledDataset/LabeledRICO/Search screen/com.auntieannes.pretzelperks_trace_1_213.jpg", 'regular')))
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Time Elapsed: {elapsed_time} seconds")
+
+
     ### embedding propagation using constant weights
     # weights can be chosen from [0, 1] with increment of 0.1 (0.5 by default used by Athena)
     # option = 1 means only consider 1-hop neighbors; = 2 means consider neighbors within two hops (2 by default used by Athena)
