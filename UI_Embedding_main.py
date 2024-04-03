@@ -25,8 +25,8 @@ from graphCreation import makeGraph, getConnections
 from embeddingConsolidation import makePoints, compute_centroid, concatenate_embeddings, average_lists
 
 warnings.filterwarnings("ignore")
-# os.chdir("/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding")
-uiedDir = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding/detectors/Visual/UIED-master/data/output/ip/"
+# os.chdir("")
+uiedDir = ""
 
 
 def get_degree (adj):
@@ -140,7 +140,7 @@ if __name__ == '__main__':
 #   #       #print(image)
 #   #       makeEmbedding(image, 'regular') 
     start_time = time.time()
-    print(len(makeEmbedding("/Users/arunkrishnavajjala/Documents/GMU/PhD/LabeledDataset/LabeledRICO/Search screen/com.auntieannes.pretzelperks_trace_1_213.jpg", 'regular')))
+    print(len(makeEmbedding("", 'regular')))
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"Time Elapsed: {elapsed_time} seconds")
