@@ -8,7 +8,7 @@ def calculate_average(dictionary):
         average_dict[key] = round(average,4)
     return average_dict
 
-csv_file_path = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/RawData/(BEST)P3_Rico.csv"
+csv_file_path = ""
 
 hit1Dict = {}
 hit5Dict = {}
@@ -69,4 +69,4 @@ df4 = pd.DataFrame(list(k10_avg.items()), columns=['Screen Type', 'Hits@10'])
 df_concatenated = pd.concat([df1, df2['Hits@1'], df3['Hits@5'], df4['Hits@10']], axis=1)
 
 # Write to CSV
-df_concatenated.to_csv('/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/RawData/Case Study/VASE_Case_Rico.csv', index=False)
+df_concatenated.to_csv('', index=False)
