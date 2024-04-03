@@ -70,5 +70,5 @@ def lle(csvFile):
 
 
 
-csvFile = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/UIEmbedding/rips_ricodata.csv"
+csvFile = ""
 lle(csvFile)
