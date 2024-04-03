@@ -4,7 +4,7 @@ import time
 start_time = time.time()
 testEmbeds = []
 trainEmbeds = []
-csv_file_path = "/Users/arunkrishnavajjala/Documents/GMU/PhD/LabeledDataset/avgust/avgust_labeled_data.csv"
+csv_file_path = ""
 totalCtr = 0
 
 
