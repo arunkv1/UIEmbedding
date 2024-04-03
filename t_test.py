@@ -2,8 +2,8 @@
 import scipy.stats as stats
 import csv
 
-csv_source = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/RawData/S2V_RICO.csv"
-csv_test   = "/Users/arunkrishnavajjala/Documents/GMU/PhD/P3/RawData/(BEST)P3_Rico.csv"
+csv_source = ""
+csv_test   = ""
 
 source_mrr = []
 source_k1 = []
